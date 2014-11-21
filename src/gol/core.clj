@@ -23,21 +23,8 @@
       (#{2 3} neighbor-count)
       (= 3 neighbor-count))))
 
-(defn min-and-max-by
-  [f coll]
-  (apply (juxt min max)
-         (map f coll)))
-
-(defn board-range
-  [axis board]
-  (let [axis-fn (axis {:x first :y last})]
-    (apply range (map + (min-and-max-by axis-fn board) [-1 2]))))
-
 (defn next-round
   [board]
-  (let [x-range (board-range :x board)
-        y-range (board-range :y board)]
-    (set (for [x x-range
-               y y-range
-               :when (alive-next-round? [x y] board)]
-           [x y]))))
+  (let [cells (apply clojure.set/union
+                     (cons board (map neighbors board)))]
+    (set (filter #(alive-next-round? % board) cells))))

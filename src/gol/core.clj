@@ -26,5 +26,6 @@
 (defn next-round
   [board]
   (let [cells (apply clojure.set/union
-                     (cons board (map neighbors board)))]
+                     board 
+                     (map neighbors board))]
     (set (filter #(alive-next-round? % board) cells))))
